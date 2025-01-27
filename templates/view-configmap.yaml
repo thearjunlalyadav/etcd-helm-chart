@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-view-config
+  labels:
+    app: {{ .Chart.Name }}
+data:
+  view.conf: |
+    /view/account/guid: "38165b2f-bb1c-4798-9da5-bced72b0233a"
+    /view/database/type: "Mysql"
+    /view/database/file: "view.db"
+    /view/database/host: "mysql"
+    /view/database/port: "3306"
+    /view/database/name: "view"
+    /view/database/user: "root"
+    /view/database/pass: "password"
+    /view/console/logging: "1"
+    /view/control/hostname: "control.view.io"
+    /view/control/port: "8403"
+    /view/control/ssl: "true"
+    /view/control/swversion: "v1.0.0"
+    /view/term: "xterm-256color"
+        

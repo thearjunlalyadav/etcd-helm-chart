@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-etcd
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  serviceName: {{ .Release.Name }}-etcd
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+        - name: etcd
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.ports.client }}
+              name: client
+            - containerPort: {{ .Values.service.ports.peer }}
+              name: peer
+          env:
+            - name: ETCD_CLUSTER_NAME
+              value: etcd-cluster
+            - name: ALLOW_NONE_AUTHENTICATION
+              value: "yes"
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/etcd
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: {{ .Values.storage.accessModes }}
+        resources:
+          requests:
+            storage: {{ .Values.storage.size }}
